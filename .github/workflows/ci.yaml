@@ -1,33 +1,46 @@
+# Nome do workflow
 name: ci-java-workflow
+
+# Define quando o workflow será acionado
 on:
-  pull_request:
+  pull_request: # Executa quando houver um pull request
     branches:
-      - develop
+      - develop             # Somente se o PR for feito para o branch 'develop'
+
 jobs:
-  check-application:
-    runs-on: ubuntu-latest
+  check-application: # Nome do job (conjunto de etapas)
+    runs-on: ubuntu-latest # O job será executado em um runner com Ubuntu
+
     steps:
+      # Etapa 1: Faz checkout do código-fonte do repositório
       - uses: actions/checkout@v4
+
+      # Etapa 2: Configura o Java 17 da distribuição Temurin e habilita o cache para Maven
       - uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+
+      # Etapa 3: Compila e empacota o projeto usando Maven
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
+      # Etapa 4: Configura o QEMU (para suporte a multiplataforma, usado com Docker Buildx)
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
+      # Etapa 5: Configura o Docker Buildx (para builds avançados com Docker)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Etapa 6: Constrói a imagem Docker (sem fazer push para o Docker Hub)
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v6
         with:
-          push: false
-          tags: jonhvtr/fc2.0-ci-java:latest
-          build-args: |
+          push: false                      # Não faz o push da imagem (apenas build local)
+          tags: jonhvtr/fc2.0-ci-java:latest  # Nome/tag da imagem Docker
+          build-args: |                   # Argumentos opcionais passados para o build
             arg1=value1
             arg2=value2
