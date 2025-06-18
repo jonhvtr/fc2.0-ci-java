@@ -47,6 +47,3 @@ jobs:
         with:
           push: true                      # Não faz o push da imagem (apenas build local)
           tags: jonhvtr/fc2.0-ci-java:latest  # Nome/tag da imagem Docker
-          build-args: |                   # Argumentos opcionais passados para o build
-            arg1=value1
-            arg2=value2
