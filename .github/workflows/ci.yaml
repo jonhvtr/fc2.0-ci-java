@@ -46,4 +46,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true                      # Não faz o push da imagem (apenas build local)
-          tags: jonhvtr/fc2.0-ci-java:latest  # Nome/tag da imagem Docker
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fc2.0-ci-java:latest  # Nome/tag da imagem Docker
